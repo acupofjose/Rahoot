@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Server } from "socket.io"
 import { GAME_STATE_INIT, WEBSOCKET_SERVER_PORT } from "../config.mjs"
 import Manager from "./roles/manager.js"
@@ -52,6 +53,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`user disconnected ${socket.id}`)
+
     if (gameState.manager === socket.id) {
       console.log("Reset game")
       io.to(gameState.room).emit("game:reset")
