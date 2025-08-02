@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable max-params */
 import { GAME_STATE_INIT } from "../../config.mjs"
 import { abortCooldown, cooldown, sleep } from "../utils/cooldown.js"
 import deepClone from "../utils/deepClone.js"
@@ -8,22 +10,26 @@ const Manager = {
   createRoom: (game, io, socket, password) => {
     if (game.password !== password) {
       io.to(socket.id).emit("game:errorMessage", "Bad Password")
+
+
       return
     }
 
     if (game.manager || game.room) {
       io.to(socket.id).emit("game:errorMessage", "Already manager")
+
+
       return
     }
 
-    let roomInvite = generateRoomId()
+    const roomInvite = generateRoomId()
     game.room = roomInvite
     game.manager = socket.id
 
     socket.join(roomInvite)
     io.to(socket.id).emit("manager:inviteCode", roomInvite)
 
-    console.log("New room created: " + roomInvite)
+    console.log(`New room created: ${roomInvite}`)
   },
 
   kickPlayer: (game, io, socket, playerId) => {
@@ -73,7 +79,7 @@ const Manager = {
       return
     }
 
-    game.currentQuestion++
+    game.currentQuestion += 1
     startRound(game, io, socket)
   },
 
@@ -99,7 +105,10 @@ const Manager = {
         },
       })
 
+      // eslint-disable-next-line no-param-reassign
       game = deepClone(GAME_STATE_INIT)
+
+
       return
     }
 
