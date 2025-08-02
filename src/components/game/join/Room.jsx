@@ -6,13 +6,11 @@ import { useEffect, useState } from "react"
 import { socket } from "@/context/socket"
 
 export default function Room() {
-  const { player, dispatch } = usePlayerContext()
+  const { dispatch } = usePlayerContext()
   const [roomId, setRoomId] = useState("")
-
   const handleLogin = () => {
     socket.emit("player:checkRoom", roomId)
   }
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleLogin()
@@ -20,14 +18,14 @@ export default function Room() {
   }
 
   useEffect(() => {
-    socket.on("game:successRoom", (roomId) => {
-      dispatch({ type: "JOIN", payload: roomId })
+    socket.on("game:successRoom", (newRoomId) => {
+      dispatch({ type: "JOIN", payload: newRoomId })
     })
 
     return () => {
       socket.off("game:successRoom")
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <Form>

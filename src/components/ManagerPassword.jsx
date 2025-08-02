@@ -1,5 +1,4 @@
 import Image from "next/image"
-import { usePlayerContext } from "@/context/player"
 import Form from "@/components/Form"
 import Button from "@/components/Button"
 import Input from "@/components/Input"
@@ -9,13 +8,10 @@ import logo from "@/assets/logo.svg"
 import toast from "react-hot-toast"
 
 export default function ManagerPassword() {
-  const [loading, setLoading] = useState(false)
   const [password, setPassword] = useState("")
-
   const handleCreate = () => {
     socket.emit("manager:createRoom", password)
   }
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleCreate()

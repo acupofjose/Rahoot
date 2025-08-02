@@ -1,4 +1,4 @@
-import Loader from "@/components/Loader"
+/* eslint-disable max-lines */
 import {
   SFX_PODIUM_FIRST,
   SFX_PODIUM_SECOND,
@@ -11,62 +11,68 @@ import { useEffect, useState } from "react"
 import ReactConfetti from "react-confetti"
 import useSound from "use-sound"
 
+// eslint-disable-next-line max-lines-per-function
 export default function Podium({ data: { subject, top } }) {
   const [apparition, setApparition] = useState(0)
-
   const { width, height } = useScreenSize()
-
   const [sfxtThree] = useSound(SFX_PODIUM_THREE, {
     volume: 0.2,
   })
-
   const [sfxSecond] = useSound(SFX_PODIUM_SECOND, {
     volume: 0.2,
   })
-
   const [sfxRool, { stop: sfxRoolStop }] = useSound(SFX_SNEAR_ROOL, {
     volume: 0.2,
   })
-
   const [sfxFirst] = useSound(SFX_PODIUM_FIRST, {
     volume: 0.2,
   })
 
   useEffect(() => {
-    console.log(apparition)
     switch (apparition) {
       case 4:
         sfxRoolStop()
         sfxFirst()
+
         break
+
       case 3:
         sfxRool()
+
         break
+
       case 2:
         sfxSecond()
+
         break
+
       case 1:
         sfxtThree()
+
         break
     }
-  }, [apparition, sfxFirst, sfxSecond, sfxtThree, sfxRool])
+  }, [apparition, sfxFirst, sfxSecond, sfxtThree, sfxRool, sfxRoolStop])
 
   useEffect(() => {
     if (top.length < 3) {
       setApparition(4)
+
       return
     }
 
     const interval = setInterval(() => {
       if (apparition > 4) {
         clearInterval(interval)
+
         return
       }
+
       setApparition((value) => value + 1)
     }, 2000)
 
+    // eslint-disable-next-line consistent-return
     return () => clearInterval(interval)
-  }, [apparition])
+  }, [apparition, top.length])
 
   return (
     <>

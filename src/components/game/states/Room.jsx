@@ -23,7 +23,7 @@ export default function Room({ data: { text, inviteCode } }) {
       socket.off("manager:removePlayer")
       socket.off("manager:playerKicked")
     }
-  }, [playerList])
+  }, [playerList, socket])
 
   return (
     <section className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center px-2">

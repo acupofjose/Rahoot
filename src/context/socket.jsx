@@ -8,11 +8,9 @@ export const socket = io(WEBSOCKET_PUBLIC_URL, {
 
 export const SocketContext = createContext()
 
-export const SocketContextProvider = ({ children }) => {
-  return (
+export const SocketContextProvider = ({ children }) => (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   )
-}
 
 export function useSocketContext() {
   const context = useContext(SocketContext)

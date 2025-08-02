@@ -1,6 +1,6 @@
 import AnswerButton from "../../AnswerButton"
 import { useSocketContext } from "@/context/socket"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import clsx from "clsx"
 import {
   ANSWERS_COLORS,
@@ -24,41 +24,36 @@ const calculatePercentages = (objectResponses) => {
     (accumulator, currentValue) => accumulator + currentValue,
     0,
   )
+  const result = {}
 
-  let result = {}
-
-  keys.map((key) => {
-    result[key] = ((objectResponses[key] / totalSum) * 100).toFixed() + "%"
+  keys.forEach((key) => {
+    result[key] = `${((objectResponses[key] / totalSum) * 100).toFixed()}%`
   })
 
   return result
 }
 
+// eslint-disable-next-line max-lines-per-function
 export default function Answers({
   data: { question, answers, image, time, responses, correct },
 }) {
   const { socket } = useSocketContext()
   const { player } = usePlayerContext()
-
   const [percentages, setPercentages] = useState([])
   const [cooldown, setCooldown] = useState(time)
   const [totalAnswer, setTotalAnswer] = useState(0)
-
   const [sfxPop] = useSound(SFX_ANSWERS_SOUND, {
     volume: 0.1,
   })
-
   const [sfxResults] = useSound(SFX_RESULTS_SOUND, {
     volume: 0.2,
   })
-
   const [playMusic, { stop: stopMusic, isPlaying }] = useSound(
     SFX_ANSWERS_MUSIC,
     {
       volume: 0.2,
     },
   )
-
   const handleAnswer = (answer) => {
     if (!player) {
       return
@@ -71,6 +66,7 @@ export default function Answers({
   useEffect(() => {
     if (!responses) {
       playMusic()
+
       return
     }
 
@@ -78,18 +74,16 @@ export default function Answers({
     sfxResults()
 
     setPercentages(calculatePercentages(responses))
-  }, [responses, playMusic, stopMusic])
+  }, [responses, playMusic, stopMusic, sfxResults])
 
   useEffect(() => {
     if (!isPlaying) {
       playMusic()
     }
-  }, [isPlaying])
+  }, [isPlaying, playMusic])
 
-  useEffect(() => {
-    return () => {
-      stopMusic()
-    }
+  useEffect(() => () => {
+    stopMusic()
   }, [playMusic, stopMusic])
 
   useEffect(() => {
@@ -106,7 +100,7 @@ export default function Answers({
       socket.off("game:cooldown")
       socket.off("game:playerAnswer")
     }
-  }, [sfxPop])
+  }, [sfxPop, socket])
 
   return (
     <div className="flex h-full flex-1 flex-col justify-between">
@@ -115,8 +109,9 @@ export default function Answers({
           {question}
         </h2>
 
-        {!!image && !responses && (
-          <img src={image} className="h-48 max-h-60 w-auto rounded-md" />
+        {Boolean(image) && !responses && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={image} alt="" className="h-48 max-h-60 w-auto rounded-md" />
         )}
 
         {responses && (

@@ -11,11 +11,9 @@ export default function Username() {
   const { player, dispatch } = usePlayerContext()
   const router = useRouter()
   const [username, setUsername] = useState("")
-
   const handleJoin = () => {
-    socket.emit("player:join", { username: username, room: player.room })
+    socket.emit("player:join", { username, room: player.room })
   }
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleJoin()
@@ -35,7 +33,7 @@ export default function Username() {
     return () => {
       socket.off("game:successJoin")
     }
-  }, [username])
+  }, [dispatch, router, socket, username])
 
   return (
     <Form>

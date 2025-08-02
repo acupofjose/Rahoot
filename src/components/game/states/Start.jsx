@@ -8,7 +8,6 @@ export default function Start({ data: { time, subject } }) {
   const { socket } = useSocketContext()
   const [showTitle, setShowTitle] = useState(true)
   const [cooldown, setCooldown] = useState(time)
-
   const [sfxBoump] = useSound(SFX_BOUMP_SOUND, {
     volume: 0.2,
   })
@@ -28,7 +27,7 @@ export default function Start({ data: { time, subject } }) {
       socket.off("game:startCooldown")
       socket.off("game:cooldown")
     }
-  }, [sfxBoump])
+  }, [sfxBoump, socket])
 
   return (
     <section className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center">
